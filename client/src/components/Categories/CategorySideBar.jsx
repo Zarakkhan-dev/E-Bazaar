@@ -11,7 +11,7 @@ const CategorySidebar = () => {
         <Loader />
     ) : categories && categories?.doc ? (
         <>
-            <div className="w-[300px] p-2 border mx-auto shadow-sm shadow-primary-100 bg-white-100">
+            <div className="w-[300px] p-2 border bg-white-100 shadow-sm">
                 <div className="flex flex-col gap-2">
                     {categories.doc.map((category, index) => {
                         if (index <= 10)
@@ -19,26 +19,14 @@ const CategorySidebar = () => {
                                 <Link
                                     key={index}
                                     to={`/products?category=${category._id}`}
-                                    className="flex  items-center group  p-1 border-b last:border-none cursor-pointer  gap-3 px-3"
+                                    className="flex justify-between items-center group  p-1 border-b last:border-none cursor-pointer"
                                 >
-                                       <div className="image">
-                                        <img src="https://vistamart.biz/storage/app/public/category/2024-08-08-66b4dde53db3a.png"  alt="Logo"  
-                                        className='w-[1.5vw] h-[1vw] '/>
-                                         </div>
                                     <Typography className="text-gray-700 group-hover:text-primary-600">
                                         {capitalizeFirstLetter(category.name)}
                                     </Typography>
                                 </Link>
                             )
                     })}
-                    <Link
-                        to={`/categories`}
-                        className="group text-center cursor-pointer w-full"
-                    >
-                        <Typography className="text-primary-500 p-1 group-hover:text-primary-600">
-                            view more
-                        </Typography>
-                    </Link>
                 </div>
             </div>
         </>

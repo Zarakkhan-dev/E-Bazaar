@@ -1,7 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
 import { FaAngleRight } from 'react-icons/fa'
 import {
-    useGetProductDetailsQuery,
+    useGetProductBySlugQuery,
+    // useGetProductDetailsQuery,
     useGetProductsQuery,
 } from '../../redux/slices/productsApiSlice'
 
@@ -14,9 +15,15 @@ import VendorRightBar from '../../components/Seller/VendorRightBar'
 import Overview from '../../components/Product/subcomponent/Overview'
 
 const ProductDetailsPage = () => {
-    const { id } = useParams()
+    const { slug } = useParams()
 
-    const { data: product, isLoading } = useGetProductDetailsQuery(id)
+    // const { data: product, isLoading } = useGetProductDetailsQuery(slug)
+    const { data: product, isLoading } = useGetProductBySlugQuery(slug, {
+        skip: !slug,
+    })
+
+    console.log(product)
+
     const { data: products, isLoading: isProductsLoading } =
         useGetProductsQuery(
             {
@@ -24,6 +31,8 @@ const ProductDetailsPage = () => {
             },
             { skip: !product?.category?._id }
         )
+
+    console.log(products)
 
     return isLoading ? (
         <Loader />
@@ -33,7 +42,7 @@ const ProductDetailsPage = () => {
                 <div className="flex flex-col">
                     <Product product={product?.doc} />
                     <Overview />
-                    {/* <ProductReviews product={product?.doc} /> */}
+                    <ProductReviews product={product?.doc} />
                 </div>
 
                 <VendorRightBar vendorId={product?.userId} />
@@ -56,12 +65,12 @@ const ProductDetailsPage = () => {
                             </span>
                         </Link>
                     </div>
-                    {/* <ProductCarousel
+                    <ProductCarousel
                         data={products?.doc}
                         component={ProductCard}
                         largeDesktopLimit={5}
                         desktopLimit={4}
-                    /> */}
+                    />
                 </div>
             ) : null}
         </div>

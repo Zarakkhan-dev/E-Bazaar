@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 
 import { logout } from '../../redux/slices/authSlice'
 import { useCustomerLogoutMutation } from '../../redux/slices/customersApiSlice'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 
 const ProfileMenu = ({ user }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -66,7 +66,7 @@ const ProfileMenu = ({ user }) => {
             {isMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                     <button
-                        onClick={() => closeMenu('/profile/profile-info')}
+                        onClick={() => closeMenu(`/profile/profile-info`)}
                         className="flex items-center gap-2 px-4 py-2 w-full text-left text-sm text-gray-700 hover:bg-gray-100"
                     >
                         <AiOutlineUser className="h-4 w-4" />

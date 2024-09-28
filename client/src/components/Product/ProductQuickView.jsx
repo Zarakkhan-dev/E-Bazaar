@@ -8,8 +8,9 @@ import Quantity from './subcomponent/Quantity'
 import { FaXmark } from 'react-icons/fa6'
 import Loader from '../Loader'
 import { useGetProductDetailsQuery } from '../../redux/slices/productsApiSlice'
-import { toast } from 'react-toastify'
 import WishListIcon from './subcomponent/WishListIcon'
+import { API_URL, DEFAULT_IMG } from '../../utils/constants'
+import toast from 'react-hot-toast'
 
 const ProductQuickView = ({ productId, onClose }) => {
     const { data: product, isLoading } = useGetProductDetailsQuery(productId, {
@@ -42,7 +43,7 @@ const ProductQuickView = ({ productId, onClose }) => {
 
     const addToCartHandler = () => {
         if (qty >= product.doc.minimumOrderQty) {
-            dispatch(addToCart({ ...product, qty }))
+            dispatch(addToCart({ ...product.doc, qty }))
             onClose()
             toast.success('Item added successfully')
         } else setMinimumOrderError(true)
@@ -63,6 +64,8 @@ const ProductQuickView = ({ productId, onClose }) => {
         } else setMinimumOrderError(true)
     }
 
+    console.log(qty)
+
     return isLoading ? (
         <div className="z-50">
             <Loader />
@@ -70,7 +73,7 @@ const ProductQuickView = ({ productId, onClose }) => {
     ) : product && product?.doc ? (
         <div className="flex flex-col border shadow-lg bg-white rounded-lg">
             <div className="flex justify-between items-center p-4 border-b">
-                <Link to={`/products/${product.doc._id}`}>
+                <Link to={`/products/${product.doc.slug}`}>
                     <h2 className="text-xl font-semibold">
                         {product.doc.name}
                     </h2>
@@ -83,7 +86,11 @@ const ProductQuickView = ({ productId, onClose }) => {
                 <div className="w-1/2 flex flex-col">
                     <div className="w-full h-80 overflow-hidden shadow-sm">
                         <img
-                            src={`http://localhost:3000/${mainImage}`}
+                            src={
+                                mainImage
+                                    ? `${API_URL}/${mainImage}`
+                                    : DEFAULT_IMG
+                            }
                             alt={product.doc.name}
                             className="w-full lg:h-96 md:h-80 h-40 object-contain py-2 transition-all duration-300 ease-out"
                         />
@@ -92,7 +99,7 @@ const ProductQuickView = ({ productId, onClose }) => {
                         {productImages?.map((src, index) => (
                             <img
                                 key={index}
-                                src={`http://localhost:3000/${src}`}
+                                src={`${API_URL}/${src}` || DEFAULT_IMG}
                                 alt={`Thumbnail ${index + 1}`}
                                 className="w-20 lg:h-20 h-10 object-cover mr-2 border border-gray-100 rounded-md cursor-pointer"
                                 onClick={() => setMainImage(src)}
@@ -121,7 +128,7 @@ const ProductQuickView = ({ productId, onClose }) => {
                             </p>
                         )}
                     </div>
-                    <div className="">
+                    <div className="flex items-center">
                         {product.doc.stock > 1 ? (
                             <div>
                                 <div className="flex items-center gap-2 mb-2">
@@ -131,7 +138,7 @@ const ProductQuickView = ({ productId, onClose }) => {
                                     <Quantity
                                         qty={qty}
                                         setQty={setQty}
-                                        product={product}
+                                        product={product.doc}
                                     />
                                     <span className="mx-2 px-1 text-sm">
                                         {product.doc.stock} pieces left
@@ -143,12 +150,6 @@ const ProductQuickView = ({ productId, onClose }) => {
                                 </p>
                             </div>
                         ) : null}
-                        {minimumOrderError && (
-                            <p className="bg-red-50 border border-red-500 rounded-lg text-red-500 py-2 px-4 text-base transition-all ease-in-out duration-300">
-                                {`The min. order for this item is ${product.doc.minimumOrderQty} 
-								piece. Adjust quantity to continue.`}
-                            </p>
-                        )}
                     </div>
                     <div className="flex items-center gap-2">
                         <h3 className="text-gray-800 font-bold">

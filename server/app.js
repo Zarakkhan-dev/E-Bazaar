@@ -6,7 +6,7 @@ import morgan from 'morgan'
 import globalErrorHandler from './controllers/errorController.js'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
-
+import helmet from "helmet";
 // ROUTES
 import userRoutes from './routes/userRoutes.js'
 import vendorRoutes from './routes/vendorRoutes.js'
@@ -53,12 +53,11 @@ const app = express()
 //     })
 // )
 
-app.use(
-    cors({
-        origin: '*',
-        credentials: true,
-    })
-)
+
+// Use Helmet!
+app.use(helmet());
+
+app.use(cors())
 // Global input sanitization middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

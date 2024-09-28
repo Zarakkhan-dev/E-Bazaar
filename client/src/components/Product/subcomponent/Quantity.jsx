@@ -4,11 +4,12 @@ import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { addToCart } from '../../../redux/slices/cartSlice'
 import { useEffect } from 'react'
-import { toast } from 'react-toastify'
-
+import toast from 'react-hot-toast'
 const Quantity = ({ product, qty, setQty }) => {
     const location = useLocation()
     const dispatch = useDispatch()
+
+    console.log(product)
 
     useEffect(() => {
         if (location.pathname === '/cart') {

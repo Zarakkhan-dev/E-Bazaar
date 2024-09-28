@@ -1,49 +1,49 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaTimes } from "react-icons/fa";
-import { HiSearch } from "react-icons/hi";
-import { useGetAllProductsQuery } from "../../redux/slices/productsApiSlice";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { FaTimes } from 'react-icons/fa'
+import { HiSearch } from 'react-icons/hi'
+import { useGetAllProductsQuery } from '../../redux/slices/productsApiSlice'
 
 const SearchBar = () => {
-    const [query, setQuery] = useState("");
-    const [showSuggestions, setShowSuggestions] = useState(false);
-    const navigate = useNavigate();
+    const [query, setQuery] = useState('')
+    const [showSuggestions, setShowSuggestions] = useState(false)
+    const navigate = useNavigate()
 
-    const { data: suggestions, isFetching } = useGetAllProductsQuery();
+    const { data: suggestions, isFetching } = useGetAllProductsQuery()
     const handleInputChange = (e) => {
-        const inputValue = e.target.value;
-        setQuery(inputValue);
+        const inputValue = e.target.value
+        setQuery(inputValue)
 
         // Show suggestions only when query is not empty
-        setShowSuggestions(inputValue.trim().length > 0);
-    };
+        setShowSuggestions(inputValue.trim().length > 0)
+    }
 
     const handleClearInput = () => {
-        setQuery("");
-        setShowSuggestions(false);
-    };
+        setQuery('')
+        setShowSuggestions(false)
+    }
 
     const handleSearch = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         if (query) {
-            navigate(`/search?query=${query}`);
-            setShowSuggestions(false);
+            navigate(`/search?query=${query}`)
+            setShowSuggestions(false)
         }
-        setQuery("")
-    };
+        setQuery('')
+    }
 
     const handleSuggestionClick = (suggestion) => {
-        setQuery(suggestion.name);
-        setShowSuggestions(false);
-        navigate(`/products/${suggestion._id}`);
-    };
+        setQuery(suggestion.name)
+        setShowSuggestions(false)
+        navigate(`/products/${suggestion.slug}`)
+    }
 
     // Filter the products based on the query
     const filteredSuggestions = query
         ? suggestions?.doc.filter((product) =>
               product.name.toLowerCase().startsWith(query.toLowerCase())
           )
-        : [];
+        : []
 
     return (
         <div className="relative mx-1">
@@ -76,9 +76,10 @@ const SearchBar = () => {
             {showSuggestions && query && (
                 <div className="absolute top-full mt-1 w-full bg-white border rounded shadow-lg z-10">
                     {isFetching && <p className="p-2">Loading...</p>}
-                    {filteredSuggestions && filteredSuggestions.length === 0 && (
-                        <p className="p-2 text-red-500">No products found</p>
-                    )}
+                    {filteredSuggestions &&
+                        filteredSuggestions.length === 0 && (
+                            <p className="p-5">{''}</p>
+                        )}
                     <ul className="list-none p-0 m-0">
                         {filteredSuggestions.map((product) => (
                             <li
@@ -96,7 +97,7 @@ const SearchBar = () => {
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
 
-export default SearchBar;
+export default SearchBar
