@@ -1,10 +1,23 @@
 /* eslint-disable react/prop-types */
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useDeleteWishlistProductMutation } from "../../../redux/slices/wishlistApiSlice";
 
-const WishItem = ({ product }) => {
+const WishItem = ({ product,customer,refetch }) => {
 	const oldPrice = product?.price + product?.discount || 0;
 
+	const  [deleteWishlistProduct] = useDeleteWishlistProductMutation();
+	const removeItem =async (productId)=>{
+		try {
+			const data ={
+				customer ,productId
+			}
+			await deleteWishlistProduct (data);
+			refetch();
+		} catch (error) {
+			console.log(error)
+		}
+	}
 	return (
 		<div>
 			<div className="w-full bg-white border border-primary-100 rounded-lg overflow-hidden flex justify-between items-center mx-2 px-2">
@@ -39,7 +52,7 @@ const WishItem = ({ product }) => {
 				</div>
 
 				<button className="">
-					<FaHeart className="mr-2 w-6 h-6 text-primary-400 hover:text-primary-500 transition-all duration-100 ease-in" />
+					<FaHeart className="mr-2 w-6 h-6 text-primary-400 hover:text-primary-500 transition-all duration-100 ease-in" onClick={()=>removeItem(product._id)} />
 				</button>
 			</div>
 		</div>

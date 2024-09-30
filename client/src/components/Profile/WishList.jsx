@@ -6,24 +6,20 @@ import WishItem from './subcomponenets/WishItem'
 const WishList = () => {
     const { userInfo } = useSelector((state) => state.auth)
 
-    const { data: wishList, isLoading } = useGetWishListByIdQuery(
+    const { data: wishList, isLoading,refetch } = useGetWishListByIdQuery(
         userInfo?.user?._id,
-        {
-            skip: !userInfo?.user?._id,
-        }
     )
 
-    console.log(wishList)
 
     return isLoading ? (
         <Loader />
     ) : (
         <div className="p-8 shadow-sm shadow-primary-100">
             <h2 className="text-xl font-bold mb-4">WishList</h2>
-            {wishList && wishList?.products && wishList?.products.length ? (
+            {wishList && wishList?.doc?.products && wishList?.doc?.products.length ? (
                 <div className="flex flex-col gap-2">
-                    {wishList?.products?.map((product) => (
-                        <WishItem key={product._id} product={product} />
+                    {wishList?.doc?.products?.map((product) => (
+                        <WishItem key={product._id} product={product} customer = {wishList.doc.customer._id} refetch={refetch} />
                     ))}
                 </div>
             ) : (
